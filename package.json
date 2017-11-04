@@ -1,0 +1,29 @@
+{
+  "name": "cappuccino-websockets",
+  "version": "1.0.0",
+  "description": "Introduction ============",
+  "main": "server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StevenClarkTech/Cappuccino-WebSockets.git"
+  },
+  "author": "steven petteruti, anthony clark",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StevenClarkTech/Cappuccino-WebSockets/issues"
+  },
+  "homepage": "https://github.com/StevenClarkTech/Cappuccino-WebSockets#readme"
+}
