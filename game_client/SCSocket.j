@@ -51,7 +51,7 @@ CPLog('attempint to send message');
 
 socket.emit('deal', { hello: 'world' });
 
-  //  socket.send([CPString JSONFromObject:jsonData]);
+    socket.send([CPString JSONFromObject:jsonData]);
 }
 
 + (SCSocket)sharedSocket

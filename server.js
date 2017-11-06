@@ -16,12 +16,21 @@ var io = socket(server);
 
 // JJSON for game_state
 var game_state_fake = {
-  "board": "[Ac, Th, Qs]",
-  "players_sat": "[seat1, seat2, seat3, seat4]",
-  "players_with_cards": "[seat1, seat2]",
-  "bigBlind": "seat3",
-  "smallBlind": "seat2",
-  "button": "seat1"
+  board: "[Ac, Th, Qs]",
+  players_sat: [
+        {
+            name:  'John1',
+            seat:   '1',
+        },
+        {
+            name:  'Jake2',
+            seat:   '2',
+        }
+  ],
+  players_with_cards: "[seat1, seat2]",
+  bigBlind: "seat3",
+  smallBlind: "seat2",
+  button: "seat1"
 };
 
 io.on('connection', function(socket){
@@ -29,7 +38,7 @@ io.on('connection', function(socket){
   console.log('made socket connection from the server!', socket.id);
 
   // we should emit the current game_state
-  socket.emit('game_state', game_state_fake);
+  socket.emit('message', game_state_fake);
 
 
  /* pseudocode for an example of an action
@@ -42,6 +51,6 @@ io.on('connection', function(socket){
 
   });
 */
-  
+
 
 });

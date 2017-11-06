@@ -37,7 +37,7 @@
     playerArray = [[CPMutableArray alloc] init];
     cardViewArray = [[CPMutableArray alloc] init];
     objectManager = [[RFObjectManager alloc] initWithFakeData];
-    [[SCSocket sharedSocket] setDelegate:self];
+  //  [[SCSocket sharedSocket] setDelegate:self];
 
     for (var i = 1; i <= 4; i++)
     {
@@ -145,12 +145,19 @@
     [deal setTarget:self];
     [deal setAction:@selector(deal:)];
 
+    var refresh = [[CPButton alloc] initWithFrame: CGRectMake(0, 24*3, 80, 24)];
+    [refresh setTitle:"REFRESH"];
+    [refresh setTarget:self];
+    [refresh setAction:@selector(refresh:)];
+
     boardView = [[RFBoardView alloc] init];
     [boardView setCenter:[table center]];
 
     [contentView addSubview:button];
     [contentView addSubview:deal];
     [contentView addSubview:toggle];
+    [contentView addSubview:refresh];
+
     [contentView addSubview:boardView];
 
     [theWindow orderFront:self];
@@ -159,13 +166,32 @@
     //[CPMenu setMenuBarVisible:YES];
 }
 
-
-- (void)socket:(SCSocket)aSocket didReceiveMessage:(CPString)aMessage
-{
-CPLog('did recieve SC socket from client');
+- (void)refresh:(id)sender{
 
 
+    for (var i = 1; i <= 6; i++)
+    {
+        var cardView = [cardViewArray objectAtIndex:i-1];
+        var player = [[objectManager playerDictionary] objectForKey:i];
+
+        if (player != null) {
+          CPLog('setting seat' + i + player);
+          [cardView setPlayerString:[player playerName]];
+          [cardView setChipCount:[player chipCount]];
+
+        }
+        else{
+          // the player object is null (no one is sitting here)
+          // configure empty seat
+             [cardView setEmptySeat:  YES];
+            [cardView setHeroSeated: NO] ;
+            [cardView setPlayerString:'empty'];
+            [cardView setChipCount:''];
+
+        }
+    }
 }
+
 
 - (void)toggle:(id)sender{
       cardViewArray.forEach(function(card) {
