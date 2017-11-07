@@ -27,6 +27,7 @@ CPWebSocketStateClosed     = 3;
 
 - (id) initWithURL: (CPString)url_ delegate: (id) delegate_
 {
+  CPLog('initing CPWebSocket');
     self = [super init];
     if (self) {
         _ws = new WebSocket(url_);
@@ -67,10 +68,10 @@ CPWebSocketStateClosed     = 3;
     return _ws.readyState;
 }
 // I. Cases
-- (CPString)state 
+- (CPString)state
 {
     var result;
-    
+
     if ([self readyState] == 0) {
         result = @"CPWebSocketStateConnecting";
     }else if ([self readyState] == 1) {

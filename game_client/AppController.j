@@ -37,6 +37,7 @@
     playerArray = [[CPMutableArray alloc] init];
     cardViewArray = [[CPMutableArray alloc] init];
     objectManager = [[RFObjectManager alloc] initWithFakeData];
+    [objectManager setController:self];
   //  [[SCSocket sharedSocket] setDelegate:self];
 
     for (var i = 1; i <= 4; i++)
@@ -172,18 +173,20 @@
     for (var i = 1; i <= 6; i++)
     {
         var cardView = [cardViewArray objectAtIndex:i-1];
-        var player = [[objectManager playerDictionary] objectForKey:i];
+        var player = [[objectManager playerDictionary] objectForKey:'seat'+i];
 
-        if (player != null) {
+        if (player  != [CPNull null]) {
           CPLog('setting seat' + i + player);
           [cardView setPlayerString:[player playerName]];
           [cardView setChipCount:[player chipCount]];
+          [cardView setEmptySeat:  NO];
+          //[cardView setHeroSeated: NO] ;
 
         }
         else{
           // the player object is null (no one is sitting here)
           // configure empty seat
-             [cardView setEmptySeat:  YES];
+            [cardView setEmptySeat:  YES];
             [cardView setHeroSeated: NO] ;
             [cardView setPlayerString:'empty'];
             [cardView setChipCount:''];
@@ -243,6 +246,8 @@
     });
 
      [boardView reset];
+
+     [[SCSocket  sharedSocket] emitMessage:"clear" withData:""];
 
 }
 
@@ -359,6 +364,10 @@
   var seatNumber = [card seatNumber];
   [[objectManager playerDictionary] setObject:[objectManager hero] forKey:"seat"+seatNumber];
   [card setEmptySeat:NO];
+
+var data = {"name": "hero", "seat": seatNumber};
+[[SCSocket  sharedSocket] emitMessage:"sitDown" withData:data];
+
 }
 
 @end

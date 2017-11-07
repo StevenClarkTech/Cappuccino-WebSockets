@@ -3,8 +3,9 @@ var socket = require('socket.io');
 // App setup
 
 var app = express();
-var server = app.listen(8000, function(){
-  console.log('listen to requests on port 8000!');
+var port = 8001;
+var server = app.listen(port, function(){
+  console.log('listen to requests on port: ', port);
 });
 
 // Static files
@@ -17,21 +18,28 @@ var io = socket(server);
 // JJSON for game_state
 var game_state_fake = {
   board: "[Ac, Th, Qs]",
-  players_sat: [
-        {
-            name:  'John1',
-            seat:   '1',
-        },
-        {
-            name:  'Jake2',
-            seat:   '2',
-        }
-  ],
-  players_with_cards: "[seat1, seat2]",
-  bigBlind: "seat3",
-  smallBlind: "seat2",
-  button: "seat1"
+  players_sat: [{
+              seat: 1,
+              name: "Johnny",
+              chips: 1000
+          },
+         {
+              seat: 2,
+              name: "Bob",
+              chips: 1337
+          }
+        ],
+  hero_sat: '4',
+  players_with_cards: "[1, 2]",
+  bigBlind: "3", //this is the seat of the BB
+  smallBlind: "2",
+  button: "1"
 };
+
+
+
+
+
 
 io.on('connection', function(socket){
   // we've successfully made a connection from socket to the server
@@ -40,6 +48,38 @@ io.on('connection', function(socket){
   // we should emit the current game_state
   socket.emit('message', game_state_fake);
 
+  socket.on('sitDown', function(player){
+      game_state_fake.hero_sat = player.seat;
+
+        var didAdd = false;
+
+      game_state_fake.players_sat.forEach(function(item){
+
+        if (item.seat == player.seat) {
+          console.log('already sat: item ', item.name);
+          item.name = 'hero1';
+          item.chips = 1;
+          didAdd = true;
+        }
+      });
+      if (didAdd == false) {
+        game_state_fake.players_sat.push({seat: player.seat, name: 'hero2', chips: 2000   });
+      }
+
+      // if the above forloop didnt do shit, add new object to players_sat
+      io.sockets.emit('message', game_state_fake);
+
+  });
+
+  socket.on('clear', function(data){
+
+console.log('should clear players sat');
+
+
+      game_state_fake.players_sat = [];
+      io.sockets.emit('message', game_state_fake);
+
+  });
 
  /* pseudocode for an example of an action
   ----------------------------------------------------------

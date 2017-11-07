@@ -3,9 +3,14 @@
 @import "RFPlayer.j"
 @import "SCSocket.j"
 
+@class AppController
+
+
 @implementation RFObjectManager : CPObject
 {
 	CPDictionary playerDictionary @accessors(getter=playerDictionary);
+	AppController	controller @accessors(setter=setController);
+
 }
 
 - (id)init
@@ -31,12 +36,12 @@
     self = [super init];
 
     playerDictionary = @{
-		@"seat1": [[RFPlayer alloc] initWithName:@"Jake" andChips:3183],
+		@"seat1": [[RFPlayer alloc] initWithName:@"Obj1" andChips:3183],
 		@"seat2": [CPNull null],
-		@"seat3": [[RFPlayer alloc] initWithName:@"Anthony" andChips:1337],
+		@"seat3": [[RFPlayer alloc] initWithName:@"Obj3" andChips:1337],
 		@"seat4": [CPNull null],
 		@"seat5": [CPNull null],
-		@"seat6": [[RFPlayer alloc] initWithName:@"Steven" andChips:569],
+		@"seat6": [[RFPlayer alloc] initWithName:@"Obj6" andChips:569],
     };
 
 		[[SCSocket sharedSocket] setDelegate:self];
@@ -67,18 +72,37 @@
 {
 		//var string = [CPString JSONFromObject:jsonData];
 		//var result = CPJSObjectCreateWithJSON(string);
-		var players_sat = jsonData.players_sat;
+		playerDictionary = @{
+		@"seat1": [CPNull null],
+		@"seat2": [CPNull null],
+		@"seat3": [CPNull null],
+		@"seat4": [CPNull null],
+		@"seat5": [CPNull null],
+		@"seat6": [CPNull null]
+    };
+
+
+				var players_sat = jsonData.players_sat;
 		for (var key in players_sat) {
 		    if (players_sat.hasOwnProperty(key)) {
 					var player = players_sat[key];
+						if (player != [CPNull null]) {
+						console.log('setting dic');
 
-					[playerDictionary setObject:[[RFPlayer alloc] initWithName:player.name andChips:1000] forKey:player.seat];
-		        console.log(key + " -> " + player.name);
+
+						[playerDictionary setObject:[[RFPlayer alloc] initWithName:player.name andChips:1000] forKey:"seat"+player.seat];
+
+						}
 		    }
 		}
 
-		CPLog('did JSON: ' + [CPString JSONFromObject:jsonData.players_sat]);
+[controller refresh:self];
+		console.log(playerDictionary);
+
+
 }
+
+
 
 
 @end
