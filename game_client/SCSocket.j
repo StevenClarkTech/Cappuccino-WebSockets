@@ -11,12 +11,10 @@ var SharedSocket = nil;
 
 - (id)initWithURL:(CPURL)aURL
 {
-  CPLog('attempting to connect to ' + [aURL absoluteString]);
 
     self = [super init];
     if (self)
     {
-      CPLog('attempting to connect to ' + [aURL absoluteString]);
 
      socket = io.connect([aURL absoluteString]);
     socket.on('connect_error', function (m) { CPLog("error: " + m); });
@@ -48,22 +46,16 @@ var SharedSocket = nil;
 
 - (void)sendMessage:(JSObject)jsonData
 {
-
-    socket.emit('deal', { hello: 'world' });
     socket.send([CPString JSONFromObject:jsonData]);
-
 }
 
 - (void)emitMessage:(CPString)message withData:(JSObject)jsonData{
    socket.emit(message, jsonData);
-   CPLog('emitting ' + message + ' with data ' + jsonData);
-
 };
 
 
 + (SCSocket)sharedSocket
 {
-  CPLog("shareed socket ");
     if (!SharedSocket)
         SharedSocket = [[SCSocket alloc] initWithURL:[CPURL URLWithString:"http://localhost:8001"]];
     return SharedSocket;

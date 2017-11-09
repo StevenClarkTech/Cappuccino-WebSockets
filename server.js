@@ -29,7 +29,7 @@ var game_state_fake = {
               chips: 1337
           }
         ],
-  hero_sat: '4',
+  hero_sat: '0',
   players_with_cards: "[1, 2]",
   bigBlind: "3", //this is the seat of the BB
   smallBlind: "2",
@@ -44,26 +44,26 @@ var game_state_fake = {
 io.on('connection', function(socket){
   // we've successfully made a connection from socket to the server
   console.log('made socket connection from the server!', socket.id);
-
+  game_state_fake.hero_sat = 0;
   // we should emit the current game_state
   socket.emit('message', game_state_fake);
 
   socket.on('sitDown', function(player){
       game_state_fake.hero_sat = player.seat;
 
-        var didAdd = false;
+        var seatAlreadyTaken = false;
 
       game_state_fake.players_sat.forEach(function(item){
 
         if (item.seat == player.seat) {
           console.log('already sat: item ', item.name);
-          item.name = 'hero1';
+          item.name = 'hero_override';
           item.chips = 1;
-          didAdd = true;
+          seatAlreadyTaken = true;
         }
       });
-      if (didAdd == false) {
-        game_state_fake.players_sat.push({seat: player.seat, name: 'hero2', chips: 2000   });
+      if (seatAlreadyTaken == false) {
+        game_state_fake.players_sat.push({seat: player.seat, name: 'hero'+player.seat, chips: 2000   });
       }
 
       // if the above forloop didnt do shit, add new object to players_sat
@@ -73,9 +73,9 @@ io.on('connection', function(socket){
 
   socket.on('clear', function(data){
 
-console.log('should clear players sat');
+      console.log('should clear players sat');
 
-
+      game_state_fake.hero_sat = 0;
       game_state_fake.players_sat = [];
       io.sockets.emit('message', game_state_fake);
 

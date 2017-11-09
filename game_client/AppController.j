@@ -172,24 +172,35 @@
 
     for (var i = 1; i <= 6; i++)
     {
-        var cardView = [cardViewArray objectAtIndex:i-1];
+        var container = [cardViewArray objectAtIndex:i-1];
         var player = [[objectManager playerDictionary] objectForKey:'seat'+i];
 
         if (player  != [CPNull null]) {
-          CPLog('setting seat' + i + player);
-          [cardView setPlayerString:[player playerName]];
-          [cardView setChipCount:[player chipCount]];
-          [cardView setEmptySeat:  NO];
-          //[cardView setHeroSeated: NO] ;
+
+          [container setPlayerString:[player playerName]];
+          [container setChipCount:[player chipCount]];
+          [container setEmptySeat:  NO];
+          [container setHeroSeated: YES] ;
+
+          if (i == objectManager.hero_sat) {
+
+
+          }
 
         }
         else{
-          // the player object is null (no one is sitting here)
-          // configure empty seat
-            [cardView setEmptySeat:  YES];
-            [cardView setHeroSeated: NO] ;
-            [cardView setPlayerString:'empty'];
-            [cardView setChipCount:''];
+            // the player object is null (no one is sitting here)
+            // configure empty seat
+            [container setEmptySeat:  YES];
+            [container setHeroSeated: NO] ;
+            [container setPlayerString:'empty'];
+            [container setChipCount:''];
+        }
+
+
+        if (objectManager.hero_sat > 0) {
+          [container setHeroSeated: YES] ;
+
 
         }
     }
@@ -365,8 +376,9 @@
   [[objectManager playerDictionary] setObject:[objectManager hero] forKey:"seat"+seatNumber];
   [card setEmptySeat:NO];
 
-var data = {"name": "hero", "seat": seatNumber};
-[[SCSocket  sharedSocket] emitMessage:"sitDown" withData:data];
+
+
+[objectManager sitDownAtSeatNumber:seatNumber];
 
 }
 

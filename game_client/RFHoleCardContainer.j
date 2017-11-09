@@ -137,6 +137,9 @@
 - (void)setEmptySeat:(BOOL)empty
 {
 	isEmptySeat = empty;
+	[self renderViewForHeroSat:isHeroSeated andEmptySeat:isEmptySeat];
+
+	/*
 	if (empty == YES) {
 		if (isHeroSeated == NO) {
 		    [seatButton setHidden: NO];
@@ -157,6 +160,7 @@
 		[cardView1 setHidden:NO];
 	    [cardView2 setHidden:NO];
 	}
+	*/
 }
 
 - (void)sitDownClicked:(id)sender
@@ -187,9 +191,12 @@
 
 - (void)setHeroSeated:(BOOL)heroSeated
 {
+	// if the hero is seated somewhere
 	isHeroSeated = heroSeated;
-
+	[self renderViewForHeroSat:isHeroSeated andEmptySeat:isEmptySeat];
+/*
 	if (isEmptySeat == YES) {
+		// the seat is empty, if hero is sat, hide sitdown button, else show sitdown
 		if (isHeroSeated == NO) {
 		    [seatButton setHidden: NO];
 		    [playerView setHidden: YES];
@@ -206,10 +213,36 @@
 		[seatButton setHidden:YES];
 		[playerView setHidden:NO];
 		[cardView1 setHidden:NO];
-	    [cardView2 setHidden:NO];
+		[cardView2 setHidden:NO];
 	}
+
+*/
 
 }
 
+- (void)renderViewForHeroSat:(BOOL)isHeroSat andEmptySeat:(BOOL)isEmpty{
+
+	if (isEmpty == YES) {
+		// the seat is empty, if hero is sat, hide sitdown button, else show sitdown
+		if (isHeroSat == NO) {
+				[seatButton setHidden: NO];
+				[playerView setHidden: YES];
+		}
+		else{
+			[seatButton setHidden:YES];
+			[playerView setHidden:YES];
+		}
+
+			[cardView1 setHidden:YES];
+			[cardView2 setHidden:YES];
+	}
+	else{
+		[seatButton setHidden:YES];
+		[playerView setHidden:NO];
+		[cardView1 setHidden:NO];
+		[cardView2 setHidden:NO];
+	}
+
+}
 
 @end
